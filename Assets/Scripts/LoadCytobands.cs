@@ -57,11 +57,16 @@ public class LoadCytobands : MonoBehaviour
     void BuildCytobandMeshes(Cytoband[] cytobands)
     {
         List<Chromosome> chromosomes = new List<Chromosome>();
-        gameObject.AddComponent<MeshRenderer>();
         HashSet<string>.Enumerator chrEnum = chrNames.GetEnumerator();
-        Chromosome chr = new Chromosome(Array.FindAll(cytobands, band => band.chr == "chr1"));
-        chromosomes.Add(chr);
-        chr.BuildMesh(gameObject);
-        gameObject.GetComponent<Renderer>().material.mainTexture = chr.BuildTexture();
+        int i = 0;
+        while (chrEnum.MoveNext())
+        {
+            Chromosome chr = new Chromosome(Array.FindAll(cytobands, band => band.chr == chrEnum.Current));
+            chromosomes.Add(chr);
+            chr.Translation = new Vector3(i, i, i);
+            chr.BuildMesh();
+            chr.BuildTexture();
+            i++;
+        }
     }
 }

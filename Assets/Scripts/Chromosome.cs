@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-public class Chromosome
+public class Chromosome : UnityEngine.Object
 {
     private static readonly int basesPerUnit = 100000000;
     private static readonly int radialResolution = 21;
@@ -9,14 +9,28 @@ public class Chromosome
     private int[] pCentromere;
     private int[] qCentromere;
     private Cytoband[] Cytobands;
+    private GameObject gameObject;
     private int Length;
     private Mesh mesh;
     private Texture2D pTexture;
     public Vector3 Scale = new Vector3(1, 1, 1);
     public Vector3 Translation = new Vector3(0, 0, 0);
+    public Quaternion Rotation = new Quaternion(0, 0, 0, 0);
 
     public Chromosome(Cytoband[] cytobands)
     {
+        SetCytobands(cytobands);
+    }
+
+    public void SetCytobands(Cytoband[] cytobands)
+    {
+        if (cytobands.Length == 0)
+        {
+            return;
+        }
+
+        gameObject = new GameObject(cytobands[0].chr + " Cytoband");
+
         this.Cytobands = cytobands;
 
         // Calculate length and centromere coordinates
@@ -30,25 +44,27 @@ public class Chromosome
             {
                 if (cytobands[i].arm == 'p')
                 {
-                    pCentromere = new int[2] {cytobands[i].start, cytobands[i].end};
-                } else
+                    pCentromere = new int[2] { cytobands[i].start, cytobands[i].end };
+                }
+                else
                 {
-                    qCentromere = new int[2] {cytobands[i].start, cytobands[i].end};
+                    qCentromere = new int[2] { cytobands[i].start, cytobands[i].end };
                 }
             }
         }
     }
 
-    public Texture2D BuildTexture()
+    public void BuildTexture()
     {
         pTexture = new Texture2D(2, 1);
-        pTexture.SetPixels(0, 0, 2, 1, new Color[2] {new Color(0.75f, 0.75f, 0.75f), new Color(0.25f, 0.25f, 0.25f) });
+        pTexture.SetPixels(0, 0, 2, 1, new Color[2] {new Color(0f, 0.75f, 0f), new Color(0f, 0f, 0.75f) });
         pTexture.Apply();
-        return pTexture;
+        gameObject.GetComponent<Renderer>().material.mainTexture = pTexture;
     }
 
-    public void BuildMesh(GameObject gameObject)
+    public void BuildMesh()
     {
+        gameObject.AddComponent<MeshRenderer>();
         MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
 
         mesh = new Mesh();
@@ -78,12 +94,12 @@ public class Chromosome
         int[] triangles = new int[radialResolution * 6];
         for (int i = 0; i < radialResolution; i++)
         {
-            triangles[i * 6] = i;
+            triangles[i * 6] = (i + 1) % radialResolution;
             triangles[i * 6 + 1] = i + radialResolution;
-            triangles[i * 6 + 2] = (i + 1) % radialResolution;
-            triangles[i * 6 + 3] = triangles[i * 6 + 2];
+            triangles[i * 6 + 2] = i;
+            triangles[i * 6 + 3] = (i + 1) % radialResolution + radialResolution;
             triangles[i * 6 + 4] = triangles[i * 6 + 1];
-            triangles[i * 6 + 5] = (i + 1) % radialResolution + radialResolution;
+            triangles[i * 6 + 5] = triangles[i * 6 + 2];
         }
 
         mesh.vertices = vertices;

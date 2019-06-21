@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 144325653}
   - component: {fileID: 144325652}
   m_Layer: 0
-  m_Name: Cytobands
+  m_Name: CytobandLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

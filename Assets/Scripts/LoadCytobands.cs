@@ -63,7 +63,8 @@ public class LoadCytobands : MonoBehaviour
         {
             Chromosome chr = new Chromosome(Array.FindAll(cytobands, band => band.chr == chrEnum.Current));
             chromosomes.Add(chr);
-            chr.Translation = new Vector3(i, i, i);
+            chr.SetPosition(new Vector3(i, i, i));
+            chr.SetRotation(new Vector3(270, 0, 0));
             chr.BuildMesh();
             chr.BuildTexture();
             i++;

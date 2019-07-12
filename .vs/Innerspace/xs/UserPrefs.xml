@@ -1,5 +1,5 @@
 ﻿<Properties StartupConfiguration="{7E77E25A-C826-BCBA-3198-917604C6E55D}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Chromosome.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/LoadCytobands.cs">
     <Files>
       <File FileName="Assets/Scripts/LoadCytobands.cs" Line="71" Column="1" />
       <File FileName="Assets/Scripts/Cytoband.cs" Line="37" Column="1" />
@@ -11,7 +11,7 @@
           <Node name="Innerspace" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
-                <Node name="Chromosome.cs" selected="True" />
+                <Node name="LoadCytobands.cs" selected="True" />
               </Node>
               <Node name="TutorialInfo" expanded="True">
                 <Node name="Scripts" expanded="True">
@@ -26,7 +26,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="283e14bd-8636-4931-ae5d-f92e7b14db1c" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="ccec2e45-b9fa-4723-a240-d14c79a659de" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

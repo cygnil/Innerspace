@@ -13,9 +13,6 @@ public class Chromosome : UnityEngine.Object
     private int Length;
     private Mesh mesh;
     private Texture2D pTexture;
-    public Vector3 Scale = new Vector3(1, 1, 1);
-    public Vector3 Translation = new Vector3(0, 0, 0);
-    public Quaternion Rotation = new Quaternion(0, 0, 0, 0);
 
     public Chromosome(Cytoband[] cytobands)
     {
@@ -56,8 +53,8 @@ public class Chromosome : UnityEngine.Object
 
     public void BuildTexture()
     {
-        pTexture = new Texture2D(2, 1);
-        pTexture.SetPixels(0, 0, 2, 1, new Color[2] {new Color(0f, 0.75f, 0f), new Color(0f, 0f, 0.75f) });
+        pTexture = new Texture2D(2, 2);
+        pTexture.SetPixels(0, 0, 2, 2, new Color[4] {Color.red, new Color(0f, 0f, 0.75f), Color.green, Color.blue});
         pTexture.Apply();
         gameObject.GetComponent<Renderer>().material.mainTexture = pTexture;
     }
@@ -79,15 +76,17 @@ public class Chromosome : UnityEngine.Object
             return;
         }
 
+        Vector3 scale = this.gameObject.transform.localScale;
+        Vector3 translation = this.gameObject.transform.localPosition;
         // Build the points to use as triangle vertices
-        float zScale = this.Scale.z * this.Length / basesPerUnit;
+        float zScale = scale.z * this.Length / basesPerUnit;
         Vector3[] vertices = new Vector3[radialResolution * 2];
         for (int i = 0; i < radialResolution; i++)
         {
-            float x = Convert.ToSingle(Math.Cos(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r) * this.Scale.x + this.Translation.x;
-            float y = Convert.ToSingle(Math.Sin(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r) * this.Scale.y + this.Translation.y;
-            vertices[i] = new Vector3(x, y, -0.5f * zScale + this.Translation.z);
-            vertices[radialResolution + i] = new Vector3(x, y, 0.5f * zScale + this.Translation.z);
+            float x = Convert.ToSingle(Math.Cos(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r) * scale.x + translation.x;
+            float y = Convert.ToSingle(Math.Sin(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r) * scale.y + translation.y;
+            vertices[i] = new Vector3(x, y, -0.5f * zScale + translation.z);
+            vertices[radialResolution + i] = new Vector3(x, y, 0.5f * zScale + translation.z);
         }
 
         // Build triangles to use as faces--faces are visible in only one direction, the one which is formed by running counterclockwise
@@ -99,10 +98,30 @@ public class Chromosome : UnityEngine.Object
             triangles[i * 6 + 2] = i;
             triangles[i * 6 + 3] = (i + 1) % radialResolution + radialResolution;
             triangles[i * 6 + 4] = triangles[i * 6 + 1];
-            triangles[i * 6 + 5] = triangles[i * 6 + 2];
+            triangles[i * 6 + 5] = triangles[i * 6];
         }
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+    }
+
+    public void SetPosition(Vector3 translation)
+    {
+        this.gameObject.transform.localPosition = translation;
+    }
+
+    public void SetScale(Vector3 scale)
+    {
+        this.gameObject.transform.localScale = scale;
+    }
+
+    public void SetRotation(Vector3 rotation)
+    {
+        this.gameObject.transform.rotation = Quaternion.Euler(rotation);
+    }
+
+    public void SetRotation(Quaternion rotation)
+    {
+        this.gameObject.transform.rotation = rotation;
     }
 }

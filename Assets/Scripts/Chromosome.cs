@@ -5,7 +5,7 @@ public class Chromosome : UnityEngine.Object
 {
     private static readonly int basesPerUnit = 100000000;
     private static readonly int radialResolution = 21;
-    private static readonly float r = 1;
+    private static readonly float r = 0.2f;
     private int[] pCentromere;
     private int[] qCentromere;
     private Cytoband[] Cytobands;

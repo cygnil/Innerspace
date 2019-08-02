@@ -6,8 +6,8 @@ public class Chromosome : UnityEngine.Object
     private static readonly int basesPerUnit = 100000000;
     private static readonly int radialResolution = 21;
     private static readonly float r = 0.2f;
-    private int[] pCentromere;
-    private int[] qCentromere;
+    private Cytoband pCentromere;
+    private Cytoband qCentromere;
     private Cytoband[] Cytobands;
     private GameObject gameObject;
     private int Length;
@@ -41,11 +41,11 @@ public class Chromosome : UnityEngine.Object
             {
                 if (cytobands[i].arm == 'p')
                 {
-                    pCentromere = new int[2] { cytobands[i].start, cytobands[i].end };
+                    pCentromere = cytobands[i];
                 }
                 else
                 {
-                    qCentromere = new int[2] { cytobands[i].start, cytobands[i].end };
+                    qCentromere = cytobands[i];
                 }
             }
         }
@@ -79,7 +79,7 @@ public class Chromosome : UnityEngine.Object
         mesh.Clear();
         // Build the points to use as triangle vertices
         float zScale = this.Length / basesPerUnit;
-        Vector3[] vertices = new Vector3[radialResolution * 2];
+        Vector3[] vertices = new Vector3[radialResolution * 2 + 2];
         for (int i = 0; i < radialResolution; i++)
         {
             float x = Convert.ToSingle(Math.Cos(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r);
@@ -87,17 +87,28 @@ public class Chromosome : UnityEngine.Object
             vertices[i] = new Vector3(x, y, -0.5f * zScale);
             vertices[radialResolution + i] = new Vector3(x, y, 0.5f * zScale);
         }
+        vertices[vertices.Length - 2] = new Vector3(0, 0, -0.5f * zScale);
+        vertices[vertices.Length - 1] = new Vector3(0, 0, 0.5f * zScale);
 
         // Build triangles to use as faces--faces are visible in only one direction, the one which is formed by running counterclockwise
-        int[] triangles = new int[radialResolution * 6];
+        int[] triangles = new int[radialResolution * 12];
         for (int i = 0; i < radialResolution; i++)
         {
+            // Side triangles
             triangles[i * 6] = (i + 1) % radialResolution;
             triangles[i * 6 + 1] = i + radialResolution;
             triangles[i * 6 + 2] = i;
             triangles[i * 6 + 3] = (i + 1) % radialResolution + radialResolution;
             triangles[i * 6 + 4] = triangles[i * 6 + 1];
             triangles[i * 6 + 5] = triangles[i * 6];
+
+            // Endcap triangles
+            triangles[(radialResolution * 6) + (i * 6)] = i;
+            triangles[(radialResolution * 6) + (i * 6 + 1)] = vertices.Length - 2;
+            triangles[(radialResolution * 6) + (i * 6 + 2)] = (i + 1) % radialResolution;
+            triangles[(radialResolution * 6) + (i * 6 + 3)] = (i + 1) % radialResolution + radialResolution;
+            triangles[(radialResolution * 6) + (i * 6 + 4)] = vertices.Length - 1;
+            triangles[(radialResolution * 6) + (i * 6 + 5)] = i + radialResolution;
         }
 
         mesh.vertices = vertices;

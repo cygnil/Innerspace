@@ -76,17 +76,16 @@ public class Chromosome : UnityEngine.Object
             return;
         }
 
-        Vector3 scale = this.gameObject.transform.localScale;
-        Vector3 translation = this.gameObject.transform.localPosition;
+        mesh.Clear();
         // Build the points to use as triangle vertices
-        float zScale = scale.z * this.Length / basesPerUnit;
+        float zScale = this.Length / basesPerUnit;
         Vector3[] vertices = new Vector3[radialResolution * 2];
         for (int i = 0; i < radialResolution; i++)
         {
-            float x = Convert.ToSingle(Math.Cos(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r) * scale.x + translation.x;
-            float y = Convert.ToSingle(Math.Sin(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r) * scale.y + translation.y;
-            vertices[i] = new Vector3(x, y, -0.5f * zScale + translation.z);
-            vertices[radialResolution + i] = new Vector3(x, y, 0.5f * zScale + translation.z);
+            float x = Convert.ToSingle(Math.Cos(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r);
+            float y = Convert.ToSingle(Math.Sin(Convert.ToDouble(i) / radialResolution * Math.PI * 2) * r);
+            vertices[i] = new Vector3(x, y, -0.5f * zScale);
+            vertices[radialResolution + i] = new Vector3(x, y, 0.5f * zScale);
         }
 
         // Build triangles to use as faces--faces are visible in only one direction, the one which is formed by running counterclockwise

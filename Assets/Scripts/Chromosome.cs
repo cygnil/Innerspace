@@ -77,6 +77,7 @@ public class Chromosome : UnityEngine.Object
         }
 
         mesh.Clear();
+
         // Build the points to use as triangle vertices
         float zScale = this.Length / basesPerUnit;
         Vector3[] vertices = new Vector3[radialResolution * 2 + 2];
@@ -89,6 +90,14 @@ public class Chromosome : UnityEngine.Object
         }
         vertices[vertices.Length - 2] = new Vector3(0, 0, -0.5f * zScale);
         vertices[vertices.Length - 1] = new Vector3(0, 0, 0.5f * zScale);
+
+        // Build a very basic UV map for each vertex--this will almost certainly need to be adjusted later
+        // Dubiously necessary. I think Unity calculates a default map that's similar to this, but this is a good placeholder for later.
+        Vector2[] uvs = new Vector2[vertices.Length];
+        for (int i = 0; i < uvs.Length; i++)
+        {
+            uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
+        }
 
         // Build triangles to use as faces--faces are visible in only one direction, the one which is formed by running counterclockwise
         int[] triangles = new int[radialResolution * 12];
@@ -112,7 +121,11 @@ public class Chromosome : UnityEngine.Object
         }
 
         mesh.vertices = vertices;
+        mesh.uv = uvs;
         mesh.triangles = triangles;
+
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
     }
 
     public void SetPosition(Vector3 translation)
